@@ -231,7 +231,7 @@ public abstract class SFragment extends BaseFragment {
                     return true;
                 }
                 case R.id.status_dnd: {
-                    timelineCases().delete_redraft(status);
+                    timelineCases().delete_redraft(status, this.getContext());
                 }
             }
             return false;

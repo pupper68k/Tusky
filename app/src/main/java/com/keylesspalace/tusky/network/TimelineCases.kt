@@ -15,6 +15,7 @@
 
 package com.keylesspalace.tusky.network
 
+import android.content.Context
 import com.keylesspalace.tusky.appstore.BlockEvent
 import com.keylesspalace.tusky.appstore.EventHub
 import com.keylesspalace.tusky.appstore.MuteEvent
@@ -30,6 +31,9 @@ import retrofit2.Response
 import android.support.v4.content.ContextCompat.startActivity
 import com.keylesspalace.tusky.ComposeActivity
 import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+
+
 
 
 
@@ -44,7 +48,7 @@ interface TimelineCases {
     fun block(id: String)
     fun delete(id: String)
     fun pin(status: Status, pin: Boolean)
-    fun delete_redraft(status: Status)
+    fun delete_redraft(status: Status, c: Context)
 }
 
 class TimelineCasesImpl(
@@ -120,7 +124,16 @@ class TimelineCasesImpl(
                 .addTo(this.cancelDisposable)
     }
 
-    override fun delete_redraft(status: Status) {
+    override fun delete_redraft(status: Status, c: Context) {
+        val content = status.content.toString()
+        val media = status.attachments
+        val intent = ComposeActivity.IntentBuilder()
+                .savedTootText(content)
+                .savedVisibility(status.visibility)
+                
+                .build(c)
+        startActivity(intent)
+
         val call = mastodonApi.deleteStatus(status.id)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {}
@@ -129,18 +142,6 @@ class TimelineCasesImpl(
         })
         eventHub.dispatch(StatusDeletedEvent(status.id))
 
-        // copied from SavedTootActivity
-        //val intent = ComposeActivity.IntentBuilder()
-        //        .savedTootUid(status.getUid())
-        //        .savedTootText(status.getText())
-        //        .contentWarning(item.getContentWarning())
-        //        .savedJsonUrls(item.getUrls())
-        //        .savedJsonDescriptions(item.getDescriptions())
-        //        .inReplyToId(item.getInReplyToId())
-        //        .repyingStatusAuthor(item.getInReplyToUsername())
-        //        .replyingStatusContent(item.getInReplyToText())
-        //        .savedVisibility(item.getVisibility())
-        //        .build(getContext())
-        //startActivity(intent)
+
     }
 }
