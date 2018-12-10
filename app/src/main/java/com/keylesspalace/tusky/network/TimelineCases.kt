@@ -44,7 +44,7 @@ interface TimelineCases {
     fun block(id: String)
     fun delete(id: String)
     fun pin(status: Status, pin: Boolean)
-    fun delete_redraft(id: String)
+    fun delete_redraft(status: Status)
 }
 
 class TimelineCasesImpl(
@@ -120,18 +120,14 @@ class TimelineCasesImpl(
                 .addTo(this.cancelDisposable)
     }
 
-    override fun delete_redraft(id: String) {
-        // get copy of toot by ID
-
-        val call = mastodonApi.deleteStatus(id)
+    override fun delete_redraft(status: Status) {
+        val call = mastodonApi.deleteStatus(status.id)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {}
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
         })
-        eventHub.dispatch(StatusDeletedEvent(id))
-
-        // launch ComposeActivity with the stuuuuuuuuufffff
+        eventHub.dispatch(StatusDeletedEvent(status.id))
 
         // copied from SavedTootActivity
         //val intent = ComposeActivity.IntentBuilder()

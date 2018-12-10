@@ -230,6 +230,9 @@ public abstract class SFragment extends BaseFragment {
                     timelineCases().pin(status, !status.isPinned());
                     return true;
                 }
+                case R.id.status_dnd: {
+                    timelineCases().delete_redraft(status);
+                }
             }
             return false;
         });
