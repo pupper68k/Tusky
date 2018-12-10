@@ -30,12 +30,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.support.v4.content.ContextCompat.startActivity
 import com.keylesspalace.tusky.ComposeActivity
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
-
-
-
-
 
 /**
  * Created by charlag on 3/24/18.
@@ -130,7 +124,7 @@ class TimelineCasesImpl(
         val intent = ComposeActivity.IntentBuilder()
                 .savedTootText(content)
                 .savedVisibility(status.visibility)
-                
+                .savedAttachments(media)
                 .build(c)
         startActivity(intent)
 

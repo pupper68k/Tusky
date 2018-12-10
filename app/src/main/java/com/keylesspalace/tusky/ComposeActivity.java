@@ -1691,6 +1691,8 @@ public final class ComposeActivity
         private String replyingStatusAuthor;
         @Nullable
         private String replyingStatusContent;
+        @Nullable
+        private List<Attachment> savedAttachments;
 
         public IntentBuilder savedTootUid(int uid) {
             this.savedTootUid = uid;
@@ -1744,6 +1746,11 @@ public final class ComposeActivity
 
         public IntentBuilder replyingStatusContent(String content) {
             this.replyingStatusContent = content;
+            return this;
+        }
+
+        public IntentBuilder savedAttachments(List<Attachment> arg) {
+            this.savedAttachments = arg;
             return this;
         }
 
