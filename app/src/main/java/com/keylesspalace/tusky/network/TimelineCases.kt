@@ -121,7 +121,7 @@ class TimelineCasesImpl(
     }
 
     override fun delete_redraft(id: String) {
-        // get copy of toot
+        // get copy of toot by ID
 
         val call = mastodonApi.deleteStatus(id)
         call.enqueue(object : Callback<ResponseBody> {
@@ -130,6 +130,8 @@ class TimelineCasesImpl(
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
         })
         eventHub.dispatch(StatusDeletedEvent(id))
+
+        // launch ComposeActivity with the stuuuuuuuuufffff
 
         // copied from SavedTootActivity
         //val intent = ComposeActivity.IntentBuilder()
