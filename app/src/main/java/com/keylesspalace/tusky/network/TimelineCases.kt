@@ -27,6 +27,11 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.support.v4.content.ContextCompat.startActivity
+import com.keylesspalace.tusky.ComposeActivity
+import android.content.Intent
+
+
 
 /**
  * Created by charlag on 3/24/18.
@@ -39,6 +44,7 @@ interface TimelineCases {
     fun block(id: String)
     fun delete(id: String)
     fun pin(status: Status, pin: Boolean)
+    fun delete_redraft(id: String)
 }
 
 class TimelineCasesImpl(
@@ -114,4 +120,29 @@ class TimelineCasesImpl(
                 .addTo(this.cancelDisposable)
     }
 
+    override fun delete_redraft(id: String) {
+        // get copy of toot
+
+        val call = mastodonApi.deleteStatus(id)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {}
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
+        })
+        eventHub.dispatch(StatusDeletedEvent(id))
+
+        // copied from SavedTootActivity
+        //val intent = ComposeActivity.IntentBuilder()
+        //        .savedTootUid(status.getUid())
+        //        .savedTootText(status.getText())
+        //        .contentWarning(item.getContentWarning())
+        //        .savedJsonUrls(item.getUrls())
+        //        .savedJsonDescriptions(item.getDescriptions())
+        //        .inReplyToId(item.getInReplyToId())
+        //        .repyingStatusAuthor(item.getInReplyToUsername())
+        //        .replyingStatusContent(item.getInReplyToText())
+        //        .savedVisibility(item.getVisibility())
+        //        .build(getContext())
+        //startActivity(intent)
+    }
 }
