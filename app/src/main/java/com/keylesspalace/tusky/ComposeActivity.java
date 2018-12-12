@@ -1791,6 +1791,37 @@ public final class ComposeActivity
             if (replyingStatusAuthor != null) {
                 intent.putExtra(REPLYING_STATUS_AUTHOR_USERNAME_EXTRA, replyingStatusAuthor);
             }
+            if (savedAttachments != null) {
+                ArrayList<SavedQueuedMedia> a = new ArrayList<SavedQueuedMedia>();
+
+                convert:
+                for (Attachment i : savedAttachments) {
+                    SavedQueuedMedia q;
+                    QueuedMedia.Type t;
+
+                    switch(i.getType()){
+                        case GIFV:
+                            t = QueuedMedia.Type.IMAGE;
+                            break;
+                        case IMAGE:
+                            t = QueuedMedia.Type.IMAGE;
+                            break;
+                        case VIDEO:
+                            t = QueuedMedia.Type.VIDEO;
+                            break;
+                        case UNKNOWN:
+                            // if in the future attachments stop uploading right
+                            // suspect this switch case
+                            continue convert;
+                    }
+
+                    // size 0 cause already uploaded
+                    q = new SavedQueuedMedia(i.getId(), t, Uri.parse(i.getUrl()), 0, QueuedMedia.ReadyStage.UPLOADED, i.getDescription());
+                    a.add(q);
+                }
+
+                intent.putExtra("savedQueuedMedia", a);
+            }
             return intent;
         }
     }
