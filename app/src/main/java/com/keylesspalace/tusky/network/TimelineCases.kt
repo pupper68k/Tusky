@@ -16,6 +16,7 @@
 package com.keylesspalace.tusky.network
 
 import android.content.Context
+import android.content.Intent
 import com.keylesspalace.tusky.appstore.BlockEvent
 import com.keylesspalace.tusky.appstore.EventHub
 import com.keylesspalace.tusky.appstore.MuteEvent
@@ -119,14 +120,14 @@ class TimelineCasesImpl(
     }
 
     override fun delete_redraft(status: Status, c: Context) {
-        val content = status.content.toString()
-        val media = status.attachments
+        //val intent = Intent(context, ComposeActivity::class.java)
+
         val intent = ComposeActivity.IntentBuilder()
-                .savedTootText(content)
+                .savedTootText(status.content.toString())
                 .savedVisibility(status.visibility)
-                .savedAttachments(media)
+                .savedAttachments(status.attachments)
                 .build(c)
-        startActivity(intent)
+        startActivity(c, intent, null)
 
         val call = mastodonApi.deleteStatus(status.id)
         call.enqueue(object : Callback<ResponseBody> {

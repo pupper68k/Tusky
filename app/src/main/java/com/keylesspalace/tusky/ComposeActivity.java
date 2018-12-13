@@ -1809,9 +1809,8 @@ public final class ComposeActivity
                         case VIDEO:
                             t = QueuedMedia.Type.VIDEO;
                             break;
-                        case UNKNOWN:
-                            // if in the future attachments stop uploading right
-                            // suspect this switch case
+                        default:
+                            // also for case UNKNOWN
                             continue convert;
                     }
 
